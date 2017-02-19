@@ -1,16 +1,11 @@
 # rcvBibleWebHook.py
 
 import falcon
-import string
 import json
-import requests
 
 from app import log
-from app.database import redis_db
-from app.util.stringUtil import preProcess
-from app.util import bible_re
-from app.errors import AppError, InvalidParameterError
 from app import config
+from app.database import redis_db
 from rcvBibleBot import post_facebook_message
 
 LOG = log.get_logger()
@@ -22,10 +17,12 @@ class BibleResoure(object):
 
     # This function handles GET reuqests
     def on_get(self, req, resp):
+        # FB Messenger WebHook token verify
         if req.get_param("hub.verify_token") == config.FB_TOKEN:
             resp.body = req.get_param("hub.challenge")
-
-        resp.status = falcon.HTTP_200  # This is the default status
+        else:
+            LOG.error('verify_token is not correct')
+        resp.status = falcon.HTTP_200
 
     # This function handles POST reuqests
     def on_post(self, req, resp):
