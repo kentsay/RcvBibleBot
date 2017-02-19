@@ -3,12 +3,13 @@
 import falcon
 import string
 import json
+import requests
+
 from app import log
 from app.database import redis_db
 from app.util.stringUtil import preProcess
 from app.util import bible_re
 from app.errors import AppError, InvalidParameterError
-import requests
 from app import config
 
 LOG = log.get_logger()
