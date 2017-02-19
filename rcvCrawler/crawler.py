@@ -1,15 +1,22 @@
-import config
-from bible_re import book_re_string, testaments
-import re
-import requests
-import redis
-import json
-import string
-import falcon
-from time import sleep
+# crawler.py
 
-pool = redis.ConnectionPool(host=config.REDIS_URL, port=config.REDIS_PORT, db=config.REDIS_DB)
-rd = redis.Redis(connection_pool=pool)
+import re
+import redis
+from rq import Queue
+from rq.job import Job
+
+import config
+import log
+from bible_re import testaments
+from lsmHandler import verseProcessor
+
+LOG = log.get_logger()
+
+try:
+    pool = redis.ConnectionPool(host=config.REDIS_URL, port=config.REDIS_PORT, db=config.REDIS_DB)
+    rd = redis.Redis(connection_pool=pool)
+except Exception as ex:
+    print ex
 
 def get_book(name):
     """
@@ -31,21 +38,12 @@ for target in targets:
     for i in range(0, len(book[3])):
         for j in range (1, book[3][i]+1):
             query = "%s%d:%d" %(target,i+1,j)
-            black_list = ['Mark9:44', 'Mark9:46', 'Rom.16:24']
-            if query not in black_list:
-                r = requests.get(config.API_URL + query + config.API_FORMAT)
-                try:
-                    verse_json = json.loads(r.text, encoding='utf-8')
-                except ValueError:
-                    raise falcon.HTTPError(falcon.HTTP_400,
-                        'Malformed JSON',
-                        'Could not decode the request body. The JSON was incorrect.')
-
-                result = verse_json['verses'][0].get('text')
-                print result
-                """Add/update verses"""
-                if len(rd.smembers(query)) == 0:
-                    rd.sadd(query, result)
-                else:
-                    rd.spop(query)
-                    rd.sadd(query, result)
+            """
+            Enqueueing api request as jobs into lsm_rcv_api queue
+            and processing them in the background with workers.
+            """
+            q = Queue('lsm_rcv_api', connection=rd)
+            job = q.enqueue_call(
+                func=verseProcessor, args=(query,), result_ttl=5000
+            )
+            LOG.info('lsm-api request ' + str(job.get_id()))
