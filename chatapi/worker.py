@@ -2,7 +2,7 @@
 
 import os
 import redis
-import config
+from app import config
 from rq import Worker, Queue, Connection
 
 """RQ workers listen to fb_message queue."""
