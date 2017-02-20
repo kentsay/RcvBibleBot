@@ -45,5 +45,5 @@ class BibleResoure(object):
                     job = q.enqueue_call(
                         func=chatBotResponse, args=(message,), result_ttl=5000
                     )
-                    LOG.info('fb_message: ' + message)
+                    LOG.info('fb_message: ' + str(job.get_id()))
                     #post_facebook_message(message['sender']['id'], message['message']['text'])
