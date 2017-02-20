@@ -2,11 +2,13 @@
 
 import falcon
 import json
+from rq import Queue
+from rq.job import Job
 
 from app import log
 from app import config
 from app.database import redis_db
-from rcvBibleBot import post_facebook_message
+from rcvBibleBot import chatBotResponse
 
 LOG = log.get_logger()
 
@@ -35,6 +37,13 @@ class BibleResoure(object):
                 # Check to make sure the received call is a message call
                 # This might be delivery, optin, postback for other events
                 if 'message' in message:
-                    # Print the message to the terminal
-                    print(message)
-                    post_facebook_message(message['sender']['id'], message['message']['text'])
+                    """
+                    Enqueueing each message as jobs into fb_message queue
+                    and processing them in the background with workers.
+                    """
+                    q = Queue('fb_message', connection=self.db.connection())
+                    job = q.enqueue_call(
+                        func=chatBotResponse, args=(message,), result_ttl=5000
+                    )
+                    LOG.info('fb_message: ' + message)
+                    #post_facebook_message(message['sender']['id'], message['message']['text'])

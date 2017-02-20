@@ -13,13 +13,15 @@ from app import config
 
 LOG = log.get_logger()
 
-def post_facebook_message(fbid, recevied_message):
+def chatBotResponse(message):
     try:
         db = redis_db.RedisStorageEngine()
         r = db.connection()
     except Exception as ex:
         print ex
 
+    fbid = message['sender']['id']
+    recevied_message = message['message']['text']
     query = recevied_message.split(" ")
     book = bible_re.get_book(query[0])
     if  book is not None:
