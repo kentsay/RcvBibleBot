@@ -5,7 +5,7 @@ import redis
 import config
 from rq import Worker, Queue, Connection
 
-"""RQ workers listen to document_write and document_delete queue."""
+"""RQ workers listen to lsm_rcv_api queue to handle crawler request."""
 listen = ['lsm_rcv_api']
 redis_url = os.getenv('REDISTOGO_URL', 'redis://'+ config.REDIS_URL + ':' + config.REDIS_PORT)
 
