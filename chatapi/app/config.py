@@ -18,5 +18,6 @@ REDIS_DB   = CONFIG.get("redis", "db")
 
 LOG_LEVEL  = CONFIG.get("logging", "level")
 
+FB_MESSAGE_URL = CONFIG.get("facebook", "fb_message_url")
 FB_TOKEN = CONFIG.get("facebook", "token")
 FB_ACCESS_TOKEN = CONFIG.get("facebook", "access_token")
