@@ -21,9 +21,10 @@ def chatBotResponse(message):
     except Exception as ex:
         print ex
 
-    fbid = fbUtil.getFbId
-    recevied_message = fbUtil.getFbMessage
+    fbid = fbUtil.getFbId(message)
+    recevied_message = fbUtil.getFbMessage(message)
 
+    checkFbUser(fbid)
     query = recevied_message.split(" ")
     book = bible_re.get_book(query[0])
     if  book is not None:
@@ -37,6 +38,12 @@ def chatBotResponse(message):
         result = "Oops, cannot find this verse in the Bible."
 
     responseFbMessage(fbid, result)
+
+def checkFbUser(fbid):
+    user_details_url = "https://graph.facebook.com/v2.6/%s"%fbid
+    user_details_params = {'fields':'first_name,last_name,profile_pic', 'access_token':config.FB_ACCESS_TOKEN}
+    user_details = requests.get(user_details_url, user_details_params).json()
+    print(user_details)
 
 def responseFbMessage(fbid, message):
     post_message_url = config.FB_MESSAGE_URL + config.FB_ACCESS_TOKEN
