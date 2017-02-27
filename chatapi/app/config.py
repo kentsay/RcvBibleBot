@@ -2,7 +2,7 @@ import os
 import ConfigParser
 from itertools import chain
 
-BRAND_NAME = 'Simplesurance Text search service'
+BRAND_NAME = 'Recovery Version Bible Facebook Messenger Bot'
 
 APP_ENV = os.environ.get('APP_ENV') or 'local'  # or 'prod' to load production
 INI_FILE = os.path.join(
