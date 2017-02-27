@@ -26,7 +26,11 @@ def chatBotResponse(message):
     recevied_message = fbUtil.getFbMessage(message)
 
     if checkFbUser(fbid):
-        result = "Hi, welcome to use Recovery version Bible Chat Bot!"
+        result = "Hi, welcome to use Recovery version Bible Chat Bot! "\
+        "I support only book names, chapters, and verses found in the Recovery Version of the Holy Bible."\
+        "You can find the versers by default input mode as Prov. 29:18; Acts 26:19; Eph. 4:4-6; Rev. 21:2, 9-10. "\
+        "Anytime you need help, just type help!"\
+        "Last by not least, Living Stream Ministry retains full copyright on all these materials and hopes that our visitors will respect this."
     else:
         query = recevied_message.split(" ")
         book = bible_re.get_book(query[0])
@@ -45,8 +49,8 @@ def chatBotResponse(message):
 def checkFbUser(fbid):
     client = MongoClient()
     db = client.rcvbot
-    results = db.rcvbot.find({"fbid": fbid})
-    if len(results) is 0:
+    results = db.rcvbot.find({"fbid": fbid}).count()
+    if results == 0:
         # It's the first time for this user chat with the bot
         user_details_url = "https://graph.facebook.com/v2.6/%s"%fbid
         user_details_params = {'fields':'first_name,last_name,profile_pic', 'access_token':config.FB_ACCESS_TOKEN}
