@@ -26,11 +26,11 @@ def chatBotResponse(message):
     recevied_message = fbUtil.getFbMessage(message)
 
     if checkFbUser(fbid):
-        result = "Hi, welcome to use Recovery version Bible Chat Bot! "\
-        "I support only book names, chapters, and verses found in the Recovery Version of the Holy Bible."\
+        result = "Hi there, welcome to use Recovery version Bible Chat Bot! "\
+        "I provide you all the verses found in the Recovery Version of the Holy Bible. "\
         "You can find the versers by default input mode as Prov. 29:18; Acts 26:19; Eph. 4:4-6; Rev. 21:2, 9-10. "\
-        "Anytime you need help, just type help!"\
-        "Last by not least, Living Stream Ministry retains full copyright on all these materials and hopes that our visitors will respect this."
+        "Anytime you need help, just type help! "\
+        "Last by not least, Living Stream Ministry retains full copyright. Amen!"
     else:
         query = recevied_message.split(" ")
         book = bible_re.get_book(query[0])
