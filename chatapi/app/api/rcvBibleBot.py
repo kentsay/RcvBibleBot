@@ -37,27 +37,25 @@ def chatBotResponse(message):
         book = bible_re.get_book(query[0])
         if  book is not None:
             doc_index = book[1] + query[1]
-            if len(r.smembers(doc_index)) == 0:
-                result = "Oops, cannot find this verse in the Bible."
+            """
+            Check if it's a single verse or a range:
+                * single query: [bookName]. [chapter]:[verse]. Ex: John 5:12
+                * range query:  [bookName]. [chapter]:[verse]-[verse]. Ex: John 5:12-16
+            """
+            p = re.compile('\w*.?\d*:\d-\d*')
+            m = p.match(doc_index)
+            result = ""
+            if m:
+                # range query
+                verseRange = query[1].split(":")
+                chapter = verseRange[0]
+                verses = verseRange[1].split("-")
+                for num in range(int(verses[0]), int(verses[1])+1):
+                    verse = book[1]+chapter+":"+str(num)
+                    result += verse + " " + next(iter(r.smembers(verse))) + "\n"
             else:
-                """
-                Check if it's a single verse or a range:
-                    * single query: [bookName]. [chapter]:[verse]. Ex: John 5:12
-                    * range query:  [bookName]. [chapter]:[verse]-[verse]. Ex: John 5:12-16
-                """
-                p = re.compile('\w*.?\s\d*:\d-\d*')
-                m = p.match(doc_index)
-                if m:
-                    # range query
-                    verseRange = query[1].split(":")
-                    chapter = verseRange[0]
-                    verses = verseRange[1].split("-")
-                    for num in range(verses[0], verses[1]):
-                        verse = book[1]+chapter+":"+num
-                        result += verse + " " + next(iter(r.smembers(verse))) + "\n"
-                else:
-                    # single query
-                    result = recevied_message + " " + next(iter(r.smembers(doc_index)))
+                # single query
+                result = recevied_message + " " + next(iter(r.smembers(doc_index)))
         else:
             result = "Oops, cannot find this verse in the Bible."
 
