@@ -42,7 +42,7 @@ def chatBotResponse(message):
                 * single query: [bookName]. [chapter]:[verse]. Ex: John 5:12
                 * range query:  [bookName]. [chapter]:[verse]-[verse]. Ex: John 5:12-16
             """
-            p = re.compile('\w*.?\d*:\d-\d*')
+            p = re.compile('\w*.?\d*:\d*-\d*')
             m = p.match(doc_index)
             result = ""
             if m:
