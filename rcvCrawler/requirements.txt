@@ -12,7 +12,7 @@ python-dateutil==2.8.1
 python-mimeparse==1.6.0
 python-scriptures==3.0.0
 redis==3.5.3
-requests==2.13.0
+requests==2.20.0
 -e git+https://github.com/nvie/rq.git@55dce19a95dc043bae1691ac3bda13c33550a0ec#egg=rq
 rq-dashboard==0.6.1
 six==1.10.0
