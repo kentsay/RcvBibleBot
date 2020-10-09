@@ -16,20 +16,20 @@ try:
     pool = redis.ConnectionPool(host=config.REDIS_URL, port=config.REDIS_PORT, db=config.REDIS_DB)
     rd = redis.Redis(connection_pool=pool)
 except Exception as ex:
-    print ex
+    print (ex)
 
 def get_book(name):
     """
     Get a book from its name or None if not found
     """
-    for books in testaments.itervalues():
+    for books in testaments.values():
         for book in books:
             if re.match(book[2], name, re.IGNORECASE):
                 return book
     return None
 
 targets = []
-for books in testaments.itervalues():
+for books in testaments.values():
     for book in books:
         targets.append(book[1])
 

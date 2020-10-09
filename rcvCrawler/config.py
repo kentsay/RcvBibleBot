@@ -1,5 +1,5 @@
 import os
-import ConfigParser
+import configparser
 from itertools import chain
 
 APP_ENV = os.environ.get('APP_ENV') or 'local'  # or 'prod' to load production
@@ -7,7 +7,7 @@ INI_FILE = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
         './conf/{}.ini'.format(APP_ENV))
 
-CONFIG = ConfigParser.ConfigParser()
+CONFIG = configparser.ConfigParser()
 CONFIG.read(INI_FILE)
 
 REDIS_URL  = CONFIG.get("redis", "host")

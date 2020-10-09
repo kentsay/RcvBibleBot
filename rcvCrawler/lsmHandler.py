@@ -14,7 +14,7 @@ try:
     pool = redis.ConnectionPool(host=config.REDIS_URL, port=config.REDIS_PORT, db=config.REDIS_DB)
     rd = redis.Redis(connection_pool=pool)
 except Exception as ex:
-    print ex
+    print (ex)
 
 def verseProcessor(query):
     black_list = ['Mark9:44', 'Mark9:46', 'Rom.16:24']
@@ -30,11 +30,11 @@ def verseProcessor(query):
 
     else:
         LOG.info('Process: ' + query)
-        if query is 'Mark9:44':
+        if query == 'Mark9:44':
             result = 'See note 44-1'
-        if query is 'Mark9:46':
+        if query == 'Mark9:46':
             result = 'See note 46-1'
-        if query is 'Rom.16:24':
+        if query == 'Rom.16:24':
             result = 'See note 24-1'
 
     """Add verses into Redis"""
